@@ -1,0 +1,68 @@
+# ebs-csi-driver용 IAM Role 생성
+resource "aws_iam_role" "ebs_csi_iam_role" {
+  depends_on = [aws_iam_policy.ca_iam_policy]
+  name = "aws-ebs-csi-irsa-role-${var.infra_name}"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.oidc_provider.arn
+        },
+        Action = "sts:AssumeRoleWithWebIdentity",
+        Condition = {
+          StringEquals = {
+            "${local.oidc_provider}:aud" = "sts.amazonaws.com",
+            "${local.oidc_provider}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_csi_iam_role_attach" {
+    role = aws_iam_role.ebs_csi_iam_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+    depends_on = [ aws_iam_role.ebs_csi_iam_role ]
+}
+
+#  SA생성
+# resource "kubernetes_service_account" "aws_load_balancer_controller" {
+#   metadata {
+#     name      = "aws-load-balancer-controller"
+#     namespace = "kube-system"
+#     labels = {
+#       "app.kubernetes.io/component" = "controller"
+#       "app.kubernetes.io/name"      = "aws-load-balancer-controller"
+#     }
+#     annotations = {
+#       "eks.amazonaws.com/role-arn" = "${aws_iam_role.alb_iam_role.arn}"
+#     }
+#   }
+#   depends_on = [ aws_eks_cluster.dev_cluster, aws_eks_node_group.dev_node_group ]
+# }
+
+resource "helm_release" "aws_ebs_csi_driver" {
+  name          = "aws-ebs-csi-driver"
+  repository    = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
+  chart         = "aws-ebs-csi-driver"
+  namespace     = "kube-system"
+
+  set{
+    name    = "serviceAccount.create"
+    value   = "true"
+  }
+
+  set {
+    name    = "serviceAccount.name"
+    value   = "ebs-csi-controller-sa"
+  }
+
+  set {
+    name    = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value   = aws_iam_role.ebs_csi_iam_role.arn
+  }
+}

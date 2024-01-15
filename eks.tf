@@ -44,13 +44,6 @@ resource "aws_eks_cluster" "dev_cluster" {
   ]
 }
 
-resource "aws_eks_addon" "eks_ebs_csi_driver" {
-  cluster_name  = aws_eks_cluster.dev_cluster.name
-  addon_name    = "aws-ebs-csi-driver"
-
-  service_account_role_arn = ""
-}
-
 # 인증정보
 data "aws_eks_cluster_auth" "dev_cluster" {
   name = aws_eks_cluster.dev_cluster.name
