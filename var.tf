@@ -19,16 +19,27 @@ variable "private_subnet_cidrs" {
 }
 
 variable "iam_private_key" {
-    type = string
-    description = "Private key for Authentication."
+  type = string
+  description = "Private key for Authentication."
 }
 
 variable "iam_secret_key" {
-    type = string
-    description = "Private key for Authentication."
+  type = string
+  description = "Private key for Authentication."
 }
 
 variable "azs" {
+  type    = list(string)
   description = "A list of availability zones in the region"
   default     = ["ap-northeast-2a", "ap-northeast-2b"]
+}
+
+variable "infra_name" {
+  type = string
+  description = "infra-name"
+}
+
+variable "argocd_sub_dns" {
+    type = string
+    description = "argocd sub domain"
 }
