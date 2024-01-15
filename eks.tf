@@ -38,9 +38,17 @@ resource "aws_eks_cluster" "dev_cluster" {
     endpoint_public_access = true
   }
 
+
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy
   ]
+}
+
+resource "aws_eks_addon" "eks_ebs_csi_driver" {
+  cluster_name  = aws_eks_cluster.dev_cluster.name
+  addon_name    = "aws-ebs-csi-driver"
+
+  service_account_role_arn = ""
 }
 
 # 인증정보
