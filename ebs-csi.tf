@@ -52,17 +52,17 @@ resource "helm_release" "aws_ebs_csi_driver" {
   namespace     = "kube-system"
 
   set{
-    name    = "serviceAccount.create"
+    name    = "controller.serviceAccount.create"
     value   = "true"
   }
 
   set {
-    name    = "serviceAccount.name"
+    name    = "controller.serviceAccount.name"
     value   = "ebs-csi-controller-sa"
   }
 
   set {
-    name    = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    name    = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value   = aws_iam_role.ebs_csi_iam_role.arn
   }
 }
