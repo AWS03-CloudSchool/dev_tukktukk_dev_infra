@@ -37,6 +37,7 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
   depends_on = [ helm_release.nginx_ingress ]
 }
 
+# argocd ingress 정의
 resource "kubernetes_ingress_v1" "argocd_ingress" {
   metadata {
     name = "argocd-ingress"
@@ -69,3 +70,37 @@ resource "kubernetes_ingress_v1" "argocd_ingress" {
 
   depends_on = [ kubernetes_ingress_v1.nginx_ingress ]
 }
+
+# mysql cluster ingress
+# resource "kubernetes_ingress_v1" "test_db_cluster_ingress" {
+#   metadata {
+#     name      = "dev-db-cluster-ingress"
+#     namespace = "dev-db-cluster"
+#     annotations = {
+#       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+#       "kubernetes.io/ingress.class"                = "nginx"
+#     }
+#   }
+
+#   spec {
+#     rule {
+#       host = "devdb.tukktukk.com"
+#       http {
+#         path {
+#           backend {
+#             service {
+#               name = "dev-db-cluster"
+#               port {
+#                 number = 3306
+#               }
+#             }
+#           }
+#           path = "/"
+#           path_type = "Prefix"
+#         }
+#       }
+#     }
+#   }
+
+#   depends_on = [ kubernetes_ingress_v1.nginx_ingress ]
+# }
