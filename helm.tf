@@ -126,3 +126,42 @@ resource "helm_release" "dev_db_cluster" {
 
     depends_on = [ kubernetes_namespace.dev_db_cluster_namespace ]
 }
+
+# keycloak 배포
+resource "kubernetes_namespace" "keycloak_namespace" {
+    metadata {
+        name = "keycloak"
+    }
+}
+
+resource "helm_release" "keycloak" {
+  name       = "keycloak"
+  namespace  = "keycloak"
+  repository = "https://charts.bitnami.com/bitnami/"
+  chart      = "keycloak"
+
+  set {
+    name  = "auth.adminUser"
+    value = "admin"
+  }
+
+  set {
+    name  = "auth.adminPassword"
+    value = "wedding05"
+  }
+
+  set {
+    name  = "ingress.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "ingress.ingressClassName"
+    value = "nginx"
+  }
+
+  set {
+    name  = "ingress.hostname"
+    value = "keycloak.tukktukk.com"
+  }
+}
