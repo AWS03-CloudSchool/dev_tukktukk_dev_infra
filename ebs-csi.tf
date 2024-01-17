@@ -29,22 +29,6 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_iam_role_attach" {
     depends_on = [ aws_iam_role.ebs_csi_iam_role ]
 }
 
-#  SA생성
-# resource "kubernetes_service_account" "aws_load_balancer_controller" {
-#   metadata {
-#     name      = "aws-load-balancer-controller"
-#     namespace = "kube-system"
-#     labels = {
-#       "app.kubernetes.io/component" = "controller"
-#       "app.kubernetes.io/name"      = "aws-load-balancer-controller"
-#     }
-#     annotations = {
-#       "eks.amazonaws.com/role-arn" = "${aws_iam_role.alb_iam_role.arn}"
-#     }
-#   }
-#   depends_on = [ aws_eks_cluster.dev_cluster, aws_eks_node_group.dev_node_group ]
-# }
-
 resource "helm_release" "aws_ebs_csi_driver" {
   name          = "aws-ebs-csi-driver"
   repository    = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
