@@ -58,12 +58,14 @@ resource "helm_release" "nginx_ingress" {
   depends_on = [ kubernetes_namespace.nginx_ingress_namespace ]
 }
 
+# innodb cluster 구축
 # mysql-operator 배포
 resource "kubernetes_namespace" "mysql_operator_namespace" {
     metadata {
       name = "mysql-operator"
     }
 }
+
 
 resource "helm_release" "mysql_operator" {
     name       = "mysql-operator"
@@ -76,13 +78,13 @@ resource "helm_release" "mysql_operator" {
 
 resource "kubernetes_namespace" "dev_db_cluster_namespace" {
     metadata {
-        name = "test-db-cluster"
+        name = "dev-db-cluster"
     }
 }
 
 resource "helm_release" "dev_db_cluster" {
-    name       = "test-db-cluster"
-    namespace  = "test-db-cluster"
+    name       = "dev-db-cluster"
+    namespace  = "dev-db-cluster"
     repository = "https://mysql.github.io/mysql-operator/"
     chart      = "mysql-innodbcluster"
 
@@ -115,6 +117,7 @@ resource "helm_release" "dev_db_cluster" {
         name  = "routerInstances"
         value = "1"
     }
+    
     set {
         name = "tls.useSelfSigned"
         value = "true"

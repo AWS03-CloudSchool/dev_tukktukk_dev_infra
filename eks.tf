@@ -38,6 +38,7 @@ resource "aws_eks_cluster" "dev_cluster" {
     endpoint_public_access = true
   }
 
+
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy
   ]
