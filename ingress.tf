@@ -6,8 +6,8 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
     annotations = {
       "kubernetes.io/ingress.class" = "alb"
       "alb.ingress.kubernetes.io/scheme" = "internet-facing"
-      "alb.ingress.kubernetes.io/listen-ports" = jsonencode([{"HTTP": 80}, {"HTTPS": 443}])
-      "alb.ingress.kubernetes.io/certificate-arn" = "arn:aws:acm:ap-northeast-2:875522371656:certificate/57350ae0-c4fc-4bf6-a7e2-de2063871d11"
+      "alb.ingress.kubernetes.io/listen-ports" = jsonencode([{"HTTPS": 443}])
+      "alb.ingress.kubernetes.io/certificate-arn" = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
       "alb.ingress.kubernetes.io/subnets" = join(",", aws_subnet.public[*].id)
     }
     labels = {
