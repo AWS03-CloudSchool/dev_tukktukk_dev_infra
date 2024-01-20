@@ -140,28 +140,5 @@ resource "helm_release" "keycloak" {
   repository = "https://charts.bitnami.com/bitnami/"
   chart      = "keycloak"
 
-  set {
-    name  = "auth.adminUser"
-    value = "admin"
-  }
-
-  set {
-    name  = "auth.adminPassword"
-    value = "wedding05"
-  }
-
-  set {
-    name  = "ingress.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "ingress.ingressClassName"
-    value = "nginx"
-  }
-
-  set {
-    name  = "ingress.hostname"
-    value = "keycloak.tukktukk.com"
-  }
+  values = [file("${path.module}/keycloak-values.yaml")]
 }

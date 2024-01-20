@@ -36,7 +36,7 @@ resource "aws_eks_node_group" "dev_node_group" {
   cluster_name    = aws_eks_cluster.dev_cluster.name
   node_group_name = "node-group-${var.infra_name}"
   node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = aws_subnet.public[*].id
+  subnet_ids      = aws_subnet.private[*].id
 
   scaling_config {
     desired_size = 3
