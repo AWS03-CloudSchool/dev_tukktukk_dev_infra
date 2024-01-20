@@ -34,7 +34,7 @@ resource "aws_eks_cluster" "dev_cluster" {
   version  = "1.28"  
 
   vpc_config {
-    subnet_ids = aws_subnet.public[*].id
+    subnet_ids = aws_subnet.private[*].id
     endpoint_public_access = true
   }
 

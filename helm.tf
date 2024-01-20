@@ -126,3 +126,19 @@ resource "helm_release" "dev_db_cluster" {
 
     depends_on = [ kubernetes_namespace.dev_db_cluster_namespace ]
 }
+
+# keycloak 배포
+resource "kubernetes_namespace" "keycloak_namespace" {
+    metadata {
+        name = "keycloak"
+    }
+}
+
+resource "helm_release" "keycloak" {
+  name       = "keycloak"
+  namespace  = "keycloak"
+  repository = "https://charts.bitnami.com/bitnami/"
+  chart      = "keycloak"
+
+  values = [file("${path.module}/keycloak-values.yaml")]
+}

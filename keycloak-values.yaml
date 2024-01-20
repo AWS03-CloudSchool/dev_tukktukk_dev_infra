@@ -1,0 +1,24 @@
+service:
+  type: NodePort
+
+auth:
+  adminUser: admin
+  adminPassword: wedding05
+
+ingress:
+  enabled: false
+#   ingressClassName: nginx
+#   hostname: keycloak.tukktukk.com
+
+# keycloakConfigCli:
+#   extraEnvVars:
+#     - name: KC_HOSTNAME_ADMIN_URL
+#       value: "https://keycloak.tukktukk.com"
+#     - name: KC_HOSTNAME_URL
+#       value: "https://keycloak.tukktukk.com"
+#     # - name: KC_HEALTH_ENABLED
+    #   value: "true"
+    # - name: KEYCLOAK_PRODUCTION
+    #   value: "true"
+    # - name: KEYCLOAK_PROXY
+    #   value: "edge"
