@@ -58,8 +58,8 @@ resource "kubernetes_namespace" "monitoring_namespace" {
 }
 
 # loki 배포
-resource "helm_release" "loki01" {
-  name       = "loki01"
+resource "helm_release" "loki" {
+  name       = "loki"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "loki-distributed"
   namespace  = "monitoring"
@@ -88,7 +88,7 @@ resource "helm_release" "promtail" {
 
   values = [file("${path.module}/values/promtail-values.yaml")]
 
-  depends_on = [ helm_release.loki01 ]
+  depends_on = [ helm_release.loki ]
 }
 
 # prometheus, grafana 설치
