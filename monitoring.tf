@@ -57,52 +57,28 @@ resource "kubernetes_namespace" "monitoring_namespace" {
   depends_on = [ aws_iam_role_policy_attachment.loki_iam_role_attach ]
 }
 
-# loki SA생성
-resource "kubernetes_service_account" "loki_sa" {
-  metadata {
-    name      = "loki-sa"
-    namespace = "monitoring"
-    annotations = {
-      "eks.amazonaws.com/role-arn" = "${aws_iam_role.loki_iam_role.arn}"
-    }
-  }
-  depends_on = [ kubernetes_namespace.monitoring_namespace ]
-}
-
-# loki compactor SA 생성
-resource "kubernetes_service_account" "loki_sa_compactor" {
-  metadata {
-    name      = "loki-sa-compactor"
-    namespace = "monitoring"
-    annotations = {
-      "eks.amazonaws.com/role-arn" = "${aws_iam_role.loki_iam_role.arn}"
-    }
-  }
-  depends_on = [ kubernetes_service_account.loki_sa ]
-}
-
 # loki 배포
-resource "helm_release" "loki" {
-  name       = "loki"
+resource "helm_release" "grafana_loki2" {
+  name       = "grafana-loki2"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "loki-distributed"
   namespace  = "monitoring"
 
   values = [file("${path.module}/values/loki-values.yaml")]
 
-  depends_on = [ kubernetes_service_account.loki_sa_compactor ]
+  depends_on = [ kubernetes_namespace.monitoring_namespace ]
 }
 
 # promtail 배포
-resource "helm_release" "promtail" {
-  name       = "promtail"
+resource "helm_release" "grafana_promtail" {
+  name       = "grafana-promtail"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "promtail"
   namespace  = "monitoring"
 
   values = [file("${path.module}/values/promtail-values.yaml")]
 
-  depends_on = [ helm_release.loki ]
+  depends_on = [ helm_release.grafana_loki2 ]
 }
 
 # prometheus, grafana 설치
@@ -112,6 +88,6 @@ resource "helm_release" "prometheus_grafana" {
   chart      = "kube-prometheus-stack"
   namespace  = "monitoring"
 
-  depends_on = [ helm_release.promtail ]
+  depends_on = [ helm_release.grafana_promtail ]
 }
 

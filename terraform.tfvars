@@ -7,3 +7,5 @@ azs = ["ap-northeast-2a", "ap-northeast-2b"]
 argocd_sub_dns= "argocd"
 s3_bucket_name = "tukktukk-logs-storage"
 grafana_sub_dns= "grafana"
+iam_private_key= "AKIA4XWJTGBEC7LSKSUU"
+iam_secret_key= "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"

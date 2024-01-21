@@ -43,8 +43,8 @@ loki:
         replay_memory_ceiling: 800mb
     storage_config:
       aws:
-        region: ${var.aws_region}
-        bucketnames: ${var.s3_bucket_name}
+        region: ap-northeast-2
+        bucketnames: tukktukk-logs-storage
         insecure: false
         s3forcepathstyle: false
       tsdb_shipper:
@@ -80,10 +80,9 @@ loki:
       max_outstanding_requests_per_tenant: 2048 # default 100, 쿼리 스케줄러당 테넌트당 최대 미결 요청 수입니다. 이 제한을 초과하는 인플라이트  요청은 HTTP 응답 상태 코드 429로 실패합니다.
 
 serviceAccount:
-  create: false
+  create: true
   name: "loki-sa" # 위에서 SA 작성할 때 정해준 이름
   imagePullSecrets: []
-  annotations: {}
   automountServiceAccountToken: true
 
 ingester:
@@ -137,9 +136,9 @@ gateway:
 compactor:
   enabled: true
   serviceAccount:
-    create: false
+    create: true
     name: "loki-sa-compactor" # 위에서 SA 작성할 때 정해준 이름
-  automountServiceAccountToken: true
+    automountServiceAccountToken: true
 
 # index_gateway 블록은 개체 저장소와 지속적으로 상호 작용할 필요 없이 인덱스 쿼리 서비스를 담당하는 Loki 인덱스 게이트웨이 서버를 구성합니다.
 indexGateway:
