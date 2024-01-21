@@ -140,5 +140,5 @@ resource "helm_release" "keycloak" {
   repository = "https://charts.bitnami.com/bitnami/"
   chart      = "keycloak"
 
-  values = [file("${path.module}/keycloak-values.yaml")]
+  values = [file("${path.module}/values/keycloak-values.yaml")]
 }

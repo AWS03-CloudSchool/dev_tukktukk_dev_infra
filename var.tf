@@ -43,3 +43,13 @@ variable "argocd_sub_dns" {
     type = string
     description = "argocd sub domain"
 }
+
+variable "s3_bucket_name" {
+    type = string
+    description = "s3 bucket name"
+}
+
+variable "grafana_sub_dns" {
+    type = string
+    description = "grafana sub domain"
+}
