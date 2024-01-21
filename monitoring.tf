@@ -58,11 +58,21 @@ resource "kubernetes_namespace" "monitoring_namespace" {
 }
 
 # loki 배포
-resource "helm_release" "grafana_loki2" {
-  name       = "grafana-loki2"
+resource "helm_release" "loki01" {
+  name       = "loki01"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "loki-distributed"
   namespace  = "monitoring"
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = aws_iam_role.loki_iam_role.arn
+  }
+
+  set {
+    name  = "compactor.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = aws_iam_role.loki_iam_role.arn
+  }
 
   values = [file("${path.module}/values/loki-values.yaml")]
 
@@ -70,15 +80,15 @@ resource "helm_release" "grafana_loki2" {
 }
 
 # promtail 배포
-resource "helm_release" "grafana_promtail" {
-  name       = "grafana-promtail"
+resource "helm_release" "promtail" {
+  name       = "promtail"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "promtail"
   namespace  = "monitoring"
 
   values = [file("${path.module}/values/promtail-values.yaml")]
 
-  depends_on = [ helm_release.grafana_loki2 ]
+  depends_on = [ helm_release.loki01 ]
 }
 
 # prometheus, grafana 설치
@@ -88,6 +98,6 @@ resource "helm_release" "prometheus_grafana" {
   chart      = "kube-prometheus-stack"
   namespace  = "monitoring"
 
-  depends_on = [ helm_release.grafana_promtail ]
+  depends_on = [ helm_release.promtail ]
 }
 
