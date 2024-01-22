@@ -1,5 +1,7 @@
 service:
   type: NodePort
+  ports:
+    http: 8080
 
 auth:
   adminUser: admin
@@ -7,18 +9,25 @@ auth:
 
 ingress:
   enabled: false
-#   ingressClassName: nginx
-#   hostname: keycloak.tukktukk.com
 
-# keycloakConfigCli:
-#   extraEnvVars:
-#     - name: KC_HOSTNAME_ADMIN_URL
-#       value: "https://keycloak.tukktukk.com"
-#     - name: KC_HOSTNAME_URL
-#       value: "https://keycloak.tukktukk.com"
-#     # - name: KC_HEALTH_ENABLED
-    #   value: "true"
-    # - name: KEYCLOAK_PRODUCTION
-    #   value: "true"
-    # - name: KEYCLOAK_PROXY
-    #   value: "edge"
+extraEnvVars:
+  - name: KC_PROXY
+    value: "edge"
+
+readinessProbe:
+  httpGet:
+    path: /realms/master
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 3
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+livenessProbe:
+  httpGet:
+    path: /realms/master
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 3
+  timeoutSeconds: 5
+  failureThreshold: 3
