@@ -16,8 +16,8 @@ extraEnvVars:
   #   value: "true"
   # - name: KC_HTTP_ENABLED
   #   value: "true"
-  - name: KC_HTTPS_ENABLED
-    value: "false"
+  # - name: KC_HTTPS_ENABLED
+  #   value: "false"
   - name: KC_HOSTNAME_STRICT_HTTPS
     value: "false"
   - name: KC_HOSTNAME_STRICT

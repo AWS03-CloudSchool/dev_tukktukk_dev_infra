@@ -54,12 +54,7 @@ resource "kubernetes_ingress_v1" "keycloak_ingress" {
   }
 
   spec {
-    # ingress_class_name = "alb"
-
-    # tls {
-    #   hosts = ["keycloak.tukktukk.com"]
-    # }
-
+    
     rule {
       host = "keycloak.tukktukk.com"
 

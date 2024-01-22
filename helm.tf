@@ -142,28 +142,4 @@ resource "helm_release" "keycloak" {
 
   values = [file("${path.module}/values/keycloak-values.yaml")]
 
-  # set {
-  #   name  = "auth.adminUser"
-  #   value = "admin"
-  # }
-
-  # set {
-  #   name  = "auth.adminPassword"
-  #   value = "wedding05"
-  # }
-
-  # set {
-  #   name  = "ingress.enabled"
-  #   value = "true"
-  # }
-
-  # set {
-  #   name  = "ingress.ingressClassName"
-  #   value = "nginx"
-  # }
-
-  # set {
-  #   name  = "ingress.hostname"
-  #   value = "keycloak.tukktukk.com"
-  # }
 }
