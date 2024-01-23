@@ -143,3 +143,19 @@ resource "helm_release" "keycloak" {
   values = [file("${path.module}/values/keycloak-values.yaml")]
 
 }
+
+# keycloak 배포
+resource "kubernetes_namespace" "oauth2_proxy_namespace" {
+    metadata {
+        name = "argocd-oauth-proxy"
+    }
+}
+
+resource "helm_release" "oauth2_proxy" {
+  name = "argocd-oauth-proxy"
+  namespace = "argocd-oauth-proxy"
+  repository = "https://oauth2-proxy.github.io/manifests"
+  chart = "oauth2-proxy"
+
+  values = [file("${path.module}/values/oauth2proxy-valeus.yaml")]
+}
