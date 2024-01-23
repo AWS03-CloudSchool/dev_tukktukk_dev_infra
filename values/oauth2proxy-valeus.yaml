@@ -25,6 +25,7 @@ config:
     redeem_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/token"
     validate_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/userinfo"
     profile_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/userinfo"
+    scope="email"
 
 ingress:
   enabled: true
@@ -62,6 +63,6 @@ redis:
   # Redis specific helm chart settings, please see:
   # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
   redisPort: 6379
-  # cluster:
-  #   enabled: false
+  cluster:
+    enabled: false
   #   slaveCount: 1
