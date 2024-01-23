@@ -144,7 +144,7 @@ resource "helm_release" "keycloak" {
 
 }
 
-# keycloak 배포
+# oauth2_proxy 배포
 resource "kubernetes_namespace" "oauth2_proxy_namespace" {
     metadata {
         name = "argocd-oauth-proxy"
