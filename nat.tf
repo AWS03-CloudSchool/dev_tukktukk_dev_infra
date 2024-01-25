@@ -13,6 +13,6 @@ resource "aws_eip" "nat_dev" {
   tags = {
     Name = var.infra_name
   }
-
+  
   depends_on = [ module.nat ]
 }

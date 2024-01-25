@@ -24,6 +24,9 @@ spec:
               memory: "512Mi"
           command: ["redis-server"]
           args: ["--save", "", "--appendonly", "no"]
+          env:
+            - name: REDIS_LOG_LEVEL
+              value: "debug"
 
 ---
 apiVersion: v1
