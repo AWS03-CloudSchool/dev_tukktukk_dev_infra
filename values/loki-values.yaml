@@ -99,7 +99,6 @@ ingester:
     claims:
       - name: data
         size: 1Gi
-        storageClass: gp2
 
 distributor:
   resources:
