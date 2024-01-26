@@ -50,3 +50,36 @@ resource "helm_release" "aws_ebs_csi_driver" {
     value   = aws_iam_role.ebs_csi_iam_role.arn
   }
 }
+
+resource "kubernetes_storage_class" "ebs_sc" {
+  metadata {
+    name = "tuktuk"
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+  }
+
+  storage_provisioner = "kubernetes.io/aws-ebs"
+
+  parameters = {
+    type = "gp3"
+  }
+
+  reclaim_policy = "Retain"
+
+  allow_volume_expansion = true
+
+  depends_on = [ helm_release.aws_ebs_csi_driver ]
+}
+
+resource "null_resource" "update_storageclass" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "local-exec" {
+    command = "sh ./update-sc.sh"
+  }
+
+  depends_on = [ kubernetes_storage_class.ebs_sc ]
+}

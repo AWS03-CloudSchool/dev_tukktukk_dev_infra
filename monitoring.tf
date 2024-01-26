@@ -76,7 +76,7 @@ resource "helm_release" "loki" {
 
   values = [file("${path.module}/values/loki-values.yaml")]
 
-  depends_on = [ kubernetes_namespace.monitoring_namespace ]
+  depends_on = [ kubernetes_namespace.monitoring_namespace, null_resource.update_storageclass ]
 }
 
 # promtail 배포
@@ -88,7 +88,7 @@ resource "helm_release" "promtail" {
 
   values = [file("${path.module}/values/promtail-values.yaml")]
 
-  depends_on = [ helm_release.loki ]
+  depends_on = [ helm_release.loki, null_resource.update_storageclass ]
 }
 
 # prometheus, grafana 설치
@@ -98,6 +98,6 @@ resource "helm_release" "prometheus_grafana" {
   chart      = "kube-prometheus-stack"
   namespace  = "monitoring"
 
-  depends_on = [ helm_release.promtail ]
+  depends_on = [ helm_release.promtail, null_resource.update_storageclass ]
 }
 

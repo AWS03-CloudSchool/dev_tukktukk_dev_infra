@@ -17,26 +17,9 @@ config:
 
   # Default configuration, to be overridden
   configFile: |-
-    email_domains = [ "*" ]
-    upstreams = [ "file:///dev/null" ]
-    oidc_issuer_url = "https://keycloak.tukktukk.com/realms/Test"
     redirect_url = "https://argocd.tukktukk.com/oauth2/callback"
-    provider = "keycloak"
-    login_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/auth"
-    redeem_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/token"
-    validate_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/userinfo"
-    profile_url = "https://keycloak.tukktukk.com/realms/Test/protocol/openid-connect/userinfo"
-    scope = "email"
-    set_authorization_header= "true"
-    set_xauthrequest = true
-    cookie_refresh = "1m"
-    cookie_expire = "30m"
-    http_address = "0.0.0.0:80"
-    skip_provider_button = "true"
-    show_debug_on_error = "true"
-    session_store_type =  "redis"
-    redis_connection_url = "redis://redis-service.argocd-oauth-proxy:6379"
-    whitelist_domains = [".argocd.tukktukk.com:*"]
+    oidc_issuer_url = "https://keycloak.tukktukk.com/realms/Test"
+    code_challenge_method = "S256"
 
 ingress:
   enabled: true

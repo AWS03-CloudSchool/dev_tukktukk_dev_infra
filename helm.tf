@@ -41,7 +41,7 @@ resource "kubernetes_namespace" "nginx_ingress_namespace" {
   metadata {
     name = "ingress-nginx"
   }
-  depends_on = [ helm_release.argocd ]
+  # depends_on = [ helm_release.argocd ]
 }
 
 # nginx-ingress 배포
@@ -124,38 +124,38 @@ resource "helm_release" "dev_db_cluster" {
     }
 
 
-    depends_on = [ kubernetes_namespace.dev_db_cluster_namespace ]
+    depends_on = [ kubernetes_namespace.dev_db_cluster_namespace , null_resource.update_storageclass ]
 }
 
-# keycloak 배포
-resource "kubernetes_namespace" "keycloak_namespace" {
-    metadata {
-        name = "keycloak"
-    }
-}
+# # # keycloak 배포
+# # resource "kubernetes_namespace" "keycloak_namespace" {
+# #     metadata {
+# #         name = "keycloak"
+# #     }
+# # }
 
-resource "helm_release" "keycloak" {
-  name       = "keycloak"
-  namespace  = "keycloak"
-  repository = "https://charts.bitnami.com/bitnami/"
-  chart      = "keycloak"
+# # resource "helm_release" "keycloak" {
+# #   name       = "keycloak"
+# #   namespace  = "keycloak"
+# #   repository = "https://charts.bitnami.com/bitnami/"
+# #   chart      = "keycloak"
 
-  values = [file("${path.module}/values/keycloak-values.yaml")]
+# #   values = [file("${path.module}/values/keycloak-values.yaml")]
 
-}
+# # }
 
-# oauth2_proxy 배포
-resource "kubernetes_namespace" "oauth2_proxy_namespace" {
-    metadata {
-        name = "argocd-oauth-proxy"
-    }
-}
+# # # oauth2_proxy 배포
+# # resource "kubernetes_namespace" "oauth2_proxy_namespace" {
+# #     metadata {
+# #         name = "argocd-oauth-proxy"
+# #     }
+# # }
 
-resource "helm_release" "oauth2_proxy" {
-  name = "argocd-oauth-proxy"
-  namespace = "argocd-oauth-proxy"
-  repository = "https://oauth2-proxy.github.io/manifests"
-  chart = "oauth2-proxy"
+# # resource "helm_release" "oauth2_proxy" {
+# #   name = "argocd-oauth-proxy"
+# #   namespace = "argocd-oauth-proxy"
+# #   repository = "https://oauth2-proxy.github.io/manifests"
+# #   chart = "oauth2-proxy"
 
-  values = [file("${path.module}/values/oauth2proxy-valeus.yaml")]
-}
+# #   values = [file("${path.module}/values/oauth2proxy-valeus.yaml")]
+# # }
