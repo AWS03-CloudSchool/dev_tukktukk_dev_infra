@@ -10,6 +10,13 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
       "alb.ingress.kubernetes.io/certificate-arn" = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
       "alb.ingress.kubernetes.io/subnets" = join(",", aws_subnet.public[*].id)
       "alb.ingress.kubernetes.io/ssl-redirect" = "443"
+      # # Cognito setting 
+      # "alb.ingress.kubernetes.io/auth-type" = "cognito"
+      # "alb.ingress.kubernetes.io/auth-scope" = "openid"
+      # "alb.ingress.kubernetes.io/auth-session-timeout" = "3600"
+      # "alb.ingress.kubernetes.io/auth-session-cookie" = "AWSELBAuthSessionCookie"
+      # "alb.ingress.kubernetes.io/auth-on-unauthenticated-request" = "authenticate"
+      # "alb.ingress.kubernetes.io/auth-idp-cognito" = jsonencode({"UserPoolArn": "arn:aws:cognito-idp:ap-northeast-2:875522371656:userpool/ap-northeast-2_OphatQD53", "UserPoolClientId": "b6724nf887535v4aohlffe1ep", "UserPoolDomain": "tukktukk"})
     }
     labels = {
       "app" = "nginx-ingress"
@@ -18,6 +25,7 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
 
   spec {
     rule {
+      host = "*.tukktukk.com"
       http {
         path {
           path      = "/"
@@ -38,45 +46,68 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
   depends_on = [ helm_release.nginx_ingress ]
 }
 
-# # keycloak ingress 배포
-# resource "kubernetes_ingress_v1" "keycloak_ingress" {
-#   metadata {
-#     name        = "keycloak-ingress"
-#     namespace   = "keycloak"
-#     annotations = {
-#       "kubernetes.io/ingress.class" = "alb"
-#       "alb.ingress.kubernetes.io/scheme" = "internet-facing"
-#       "alb.ingress.kubernetes.io/target-type" =  "ip"
-#       "alb.ingress.kubernetes.io/listen-ports" = jsonencode([{"HTTP": 80},{"HTTPS": 443}])
-#       "alb.ingress.kubernetes.io/certificate-arn" = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
-#       "alb.ingress.kubernetes.io/subnets" = join(",", aws_subnet.public[*].id)
-#     }
-#   }
+resource "kubernetes_ingress_v1" "tuktuk-ing" {
+  metadata {
+    name      = "tuktuk-ing"
+    namespace = "tuktuk-front"
 
-#   spec {
-    
-#     rule {
-#       host = "keycloak.tukktukk.com"
+    annotations = {
+      "kubernetes.io/ingress.class"                                 = "alb"
+      "alb.ingress.kubernetes.io/subnets"                           = join(",", aws_subnet.public[*].id)
+      "alb.ingress.kubernetes.io/scheme"                            = "internet-facing"
+      "alb.ingress.kubernetes.io/tags"                              = "Environment=dev,Owner=admin"
+      "alb.ingress.kubernetes.io/listen-ports"                      = jsonencode([{"HTTPS": 443},{"HTTP": 80}])
+      "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
+        Type = "redirect",
+        RedirectConfig = {
+          Protocol   = "HTTPS",
+          Port       = "443",
+          StatusCode = "HTTP_301"
+        }
+      })
+      "alb.ingress.kubernetes.io/auth-type"                         = "cognito"
+      "alb.ingress.kubernetes.io/auth-scope"                        = "openid"
+      "alb.ingress.kubernetes.io/auth-session-timeout"              = "3600"
+      "alb.ingress.kubernetes.io/auth-session-cookie"               = "AWSELBAuthSessionCookie"
+      "alb.ingress.kubernetes.io/auth-on-unauthenticated-request"   = "authenticate"
+      "alb.ingress.kubernetes.io/auth-idp-cognito"                  = jsonencode({"UserPoolArn": "arn:aws:cognito-idp:ap-northeast-2:875522371656:userpool/ap-northeast-2_OphatQD53", "UserPoolClientId": "7a5df1k47qelnmah0nup15gl7p", "UserPoolDomain": "tukktukk"})
+      "alb.ingress.kubernetes.io/certificate-arn"                   = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
+    }
+  }
 
-#       http {
-#         path {
-#           path      =
-#           path_type = "Prefix"
-#           backend {
-#             service {
-#               name = "keycloak"
-#               port {
-#                 number = 80
-#               }
-#             }
-#           }
-#         }
-#       }
-#     }
-#   }
+  spec {
+    rule {
+      host = "www.tukktukk.com"
 
-#   depends_on = [ helm_release.keycloak,helm_release.nginx_ingress ]
-# }
+      http {
+        path {
+          path = "/*"
+          backend {
+            service {
+              name = "ssl-redirect"
+              port {
+                number = 443
+              }
+            }
+          }
+        }
+
+        path {
+          path = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "tuktuk-front-fronttukktukk"
+              port {
+                number = 8080
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 # argocd ingress 정의
 resource "kubernetes_ingress_v1" "argocd_ingress" {
