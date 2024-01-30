@@ -57,20 +57,13 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
       "alb.ingress.kubernetes.io/scheme"                            = "internet-facing"
       "alb.ingress.kubernetes.io/tags"                              = "Environment=dev,Owner=admin"
       "alb.ingress.kubernetes.io/listen-ports"                      = jsonencode([{"HTTPS": 443},{"HTTP": 80}])
-      "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
-        Type = "redirect",
-        RedirectConfig = {
-          Protocol   = "HTTPS",
-          Port       = "443",
-          StatusCode = "HTTP_301"
-        }
-      })
+      "alb.ingress.kubernetes.io/ssl-redirect"              = "443"
       "alb.ingress.kubernetes.io/auth-type"                         = "cognito"
       "alb.ingress.kubernetes.io/auth-scope"                        = "openid"
       "alb.ingress.kubernetes.io/auth-session-timeout"              = "3600"
       "alb.ingress.kubernetes.io/auth-session-cookie"               = "AWSELBAuthSessionCookie"
       "alb.ingress.kubernetes.io/auth-on-unauthenticated-request"   = "authenticate"
-      "alb.ingress.kubernetes.io/auth-idp-cognito"                  = jsonencode({"UserPoolArn": "arn:aws:cognito-idp:ap-northeast-2:875522371656:userpool/ap-northeast-2_OphatQD53", "UserPoolClientId": "7a5df1k47qelnmah0nup15gl7p", "UserPoolDomain": "tukktukk"})
+      "alb.ingress.kubernetes.io/auth-idp-cognito"                  = jsonencode({"UserPoolArn": "arn:aws:cognito-idp:ap-northeast-2:875522371656:userpool/ap-northeast-2_CvpIITi4y", "UserPoolClientId": "mmkq2evci6d21fjs553tnibk3", "UserPoolDomain": "tuktuk"})
       "alb.ingress.kubernetes.io/certificate-arn"                   = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
     }
   }
@@ -80,17 +73,17 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
       host = "www.tukktukk.com"
 
       http {
-        path {
-          path = "/*"
-          backend {
-            service {
-              name = "ssl-redirect"
-              port {
-                number = 443
-              }
-            }
-          }
-        }
+        # path {
+        #   path = "/*"
+        #   backend {
+        #     service {
+        #       name = "ssl-redirect"
+        #       port {
+        #         number = "use-annotation" 
+        #       }
+        #     }
+        #   }
+        # }
 
         path {
           path = "/"
