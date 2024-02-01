@@ -25,14 +25,32 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
 
   spec {
     rule {
-      host = "*.tukktukk.com"
+      host = "argocd.tukktukk.com"
       http {
         path {
-          path      = "/"
+          path = "/"
           path_type = "Prefix"
           backend {
             service {
-              name = "ingress-nginx-controller"
+              name = "argocd-server.argocd"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+
+    rule {
+      host = "grafana.tukktukk.com"
+      http {
+        path {
+          path = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "prometheus-grafana.monitoring"
               port {
                 number = 80
               }
@@ -42,7 +60,6 @@ resource "kubernetes_ingress_v1" "nginx_ingress" {
       }
     }
   }
-
   depends_on = [ helm_release.nginx_ingress ]
 }
 
@@ -73,18 +90,6 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
       host = "www.tukktukk.com"
 
       http {
-        # path {
-        #   path = "/*"
-        #   backend {
-        #     service {
-        #       name = "ssl-redirect"
-        #       port {
-        #         number = "use-annotation" 
-        #       }
-        #     }
-        #   }
-        # }
-
         path {
           path = "/"
           path_type = "Prefix"

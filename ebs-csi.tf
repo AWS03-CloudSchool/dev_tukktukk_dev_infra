@@ -66,7 +66,7 @@ resource "kubernetes_storage_class" "ebs_sc" {
   }
 
   reclaim_policy = "Retain"
-
+  volume_binding_mode = "WaitForFirstConsumer"
   allow_volume_expansion = true
 
   depends_on = [ helm_release.aws_ebs_csi_driver ]

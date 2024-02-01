@@ -53,3 +53,34 @@ variable "grafana_sub_dns" {
     type = string
     description = "grafana sub domain"
 }
+
+# backend service secret
+variable "be_access_key" {
+  description = "The AWS access key"
+  type        = string
+}
+
+variable "be_secret_key" {
+  description = "The AWS secret key"
+  type        = string
+}
+
+variable "be_bucket_name" {
+  description = "The name of the S3 bucket"
+  type        = string
+}
+
+variable "be_database_url" {
+  description = "The database URL"
+  type        = string
+}
+
+variable "mysql_root_username" {
+  description = "The MySQL root username"
+  type        = string
+}
+
+variable "mysql_root_password" {
+  description = "The MySQL root password"
+  type        = string
+}

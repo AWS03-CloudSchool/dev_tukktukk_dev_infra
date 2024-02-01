@@ -95,12 +95,12 @@ resource "helm_release" "dev_db_cluster" {
 
     set {
         name  = "credentials.root.user"
-        value = "root"
+        value = var.mysql_root_username
     }
 
     set {
         name  = "credentials.root.password"
-        value = "wedding05"
+        value = var.mysql_root_password
     }
 
     set {
