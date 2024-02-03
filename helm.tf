@@ -18,10 +18,10 @@ resource "helm_release" "argocd" {
     value = "{--insecure}"
   }
 
-  set {
-    name  = "server.service.type"
-    value = "NodePort"
-  }
+  # set {
+  #   name  = "server.service.type"
+  #   value = "NodePort"
+  # }
 
   set {
     name  = "server.service.namedTargetPort"
@@ -36,27 +36,27 @@ resource "helm_release" "argocd" {
   depends_on = [helm_release.aws_load_balancer_controller ]
 }
 
-# nginx-ingress 네임스페이스 생성
-resource "kubernetes_namespace" "nginx_ingress_namespace" {
-  metadata {
-    name = "ingress-nginx"
-  }
-  # depends_on = [ helm_release.argocd ]
-}
+# # nginx-ingress 네임스페이스 생성
+# resource "kubernetes_namespace" "nginx_ingress_namespace" {
+#   metadata {
+#     name = "ingress-nginx"
+#   }
+#   # depends_on = [ helm_release.argocd ]
+# }
 
-# nginx-ingress 배포
-resource "helm_release" "nginx_ingress" {
-  name = "ingress-nginx"
-  namespace = "ingress-nginx"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart = "ingress-nginx"
+# # nginx-ingress 배포
+# resource "helm_release" "nginx_ingress" {
+#   name = "ingress-nginx"
+#   namespace = "ingress-nginx"
+#   repository = "https://kubernetes.github.io/ingress-nginx"
+#   chart = "ingress-nginx"
 
-  set {
-    name = "controller.service.type"
-    value = "NodePort"
-  }
-  depends_on = [ kubernetes_namespace.nginx_ingress_namespace ]
-}
+#   set {
+#     name = "controller.service.type"
+#     value = "NodePort"
+#   }
+#   depends_on = [ kubernetes_namespace.nginx_ingress_namespace ]
+# }
 
 # innodb cluster 구축
 # mysql-operator 배포
