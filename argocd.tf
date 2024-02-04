@@ -50,7 +50,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress" {
 
   spec {
     rule {
-      host = "argocd.tukktukk.com"
+      host = "${var.argocd_sub_dns}.${var.tuktuk_dns}.com"
       http {
         path {
           path = "/*"

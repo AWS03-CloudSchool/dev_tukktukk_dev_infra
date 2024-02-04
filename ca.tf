@@ -73,7 +73,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "awsRegion"
-    value = "ap-northeast-2"
+    value = var.aws_region
   }
 
 

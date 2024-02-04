@@ -25,7 +25,7 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
 
   spec {
     rule {
-      host = "www.tukktukk.com"
+      host = "www.${var.tuktuk_dns}.com"
 
       http {
         path {
@@ -33,7 +33,7 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
           path_type = "ImplementationSpecific"
           backend {
             service {
-              name = "dev-tuktuk-front-fronttukktukk"
+              name = "${var.tuktuk_env}-tuktuk-front-fronttukktukk"
               port {
                 number = 8080
               }
@@ -43,4 +43,44 @@ resource "kubernetes_ingress_v1" "tuktuk-ing" {
       }
     }
   }
+}
+
+# backend ing for dev
+resource "kubernetes_ingress_v1" "tuktuk_dev_back_ing" {
+  metadata {
+    name        = "tuktuk-ing-dev-back"
+    namespace   = "tuktuk-backend"
+    annotations = {
+      "alb.ingress.kubernetes.io/group.name"      = "tuktuk"
+      "kubernetes.io/ingress.class"               = "alb"
+      "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
+      "alb.ingress.kubernetes.io/listen-ports"    = jsonencode([{"HTTPS": 443},{"HTTP": 80}])
+      "alb.ingress.kubernetes.io/certificate-arn" = "arn:aws:acm:ap-northeast-2:875522371656:certificate/f207c086-5546-471b-b648-58f6e625d90a"
+      "alb.ingress.kubernetes.io/subnets"         = join(",", aws_subnet.public[*].id)
+      "alb.ingress.kubernetes.io/ssl-redirect"    = "443"
+      "alb.ingress.kubernetes.io/target-type"     = "ip"
+    }
+  }
+
+  spec {
+    rule {
+      host = "devapi.${var.tuktuk_dns}.com"
+      http {
+        path {
+          path = "/*"
+          path_type = "ImplementationSpecific"
+          backend {
+            service {
+              name = "${var.tuktuk_env}-tuktuk-back-backtukktukk"
+              port {
+                number = 8080
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+    depends_on = [ helm_release.argocd ]
 }

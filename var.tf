@@ -3,6 +3,16 @@ variable "aws_region" {
   description = "The AWS region to deploy resources into"
 }
 
+variable "tuktuk_env" {
+  type    = string
+  description = "Development Environment Settings Variables"
+}
+
+variable "tuktuk_dns" {
+  type    = string
+  description = "Domain Name Settings"
+}
+
 variable "vpc_cidr" {
   type    = string
   description = "CIDR block for the VPC"

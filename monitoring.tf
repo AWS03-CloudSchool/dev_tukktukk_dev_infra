@@ -1,6 +1,6 @@
 # LOKI IAM Role을 위한 정책 생성
 resource "aws_iam_policy" "loki_iam_policy" {
-  name        = "AWSS3EksLokiAccess"
+  name        = "AWSS3EksLokiAccess-${var.infra_name}"
   description = "loki for S3 policy"
   policy      = file("${path.module}/policy/loki_iam_policy.json")
   depends_on = [ aws_iam_openid_connect_provider.oidc_provider ]
@@ -9,7 +9,7 @@ resource "aws_iam_policy" "loki_iam_policy" {
 # LOKI IAM Role 생성
 resource "aws_iam_role" "loki_iam_role" {
   depends_on = [aws_iam_policy.loki_iam_policy]
-  name = "AmazonEKS-Loki-Role"
+  name = "AmazonEKS-Loki-Role-${var.infra_name}"
   assume_role_policy = jsonencode({
     Version: "2012-10-17",
     Statement: [
@@ -120,7 +120,7 @@ resource "kubernetes_ingress_v1" "grafana_ingress" {
 
   spec {
     rule {
-      host = "grafana.tukktukk.com"
+      host = "grafana.${var.tuktuk_dns}.com"
       http {
         path {
           path = "/*"

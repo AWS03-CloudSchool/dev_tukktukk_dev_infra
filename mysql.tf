@@ -1,4 +1,5 @@
 # innodb cluster 구축
+# dev용 데이터베이스
 # mysql-operator 배포
 resource "kubernetes_namespace" "mysql_operator_namespace" {
     metadata {
