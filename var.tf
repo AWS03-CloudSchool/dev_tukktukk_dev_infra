@@ -94,3 +94,33 @@ variable "mysql_root_password" {
   description = "The MySQL root password"
   type        = string
 }
+
+variable "cognito_client_id" {
+  description = "value"
+  type = string
+}
+
+variable "cognito_client_name" {
+  description = "value"
+  type = string
+}
+
+variable "cognito_client_secret" {
+  description = "value"
+  type = string
+}
+
+variable "cognito_issuer_uri" {
+  description = "value"
+  type = string
+}
+
+variable "cognito_redirect_uri" {
+  description = "value"
+  type = string
+}
+
+variable "cognito_token_endpoint" {
+  description = "value"
+  type = string
+}
